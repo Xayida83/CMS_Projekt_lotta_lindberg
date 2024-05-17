@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="index.js" defer></script>
+  <script src="https://kit.fontawesome.com/cc14b49575.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css">
+  <title>Book Ducks</title>
+</head>
+<body class="winter">
+  <div id="logo">
+    <img src="/image/bookDucksLoggo-removebg.png" alt="Logo" id="logo-img">
+  </div>
+  <header>
+  <div id="login-wrapper">
+    <div id="login">      
+      <fieldset>
+        <legend>Login</legend>
+        <label for="text">Email:</label>
+        <input type="text" name="email" id="user-login" placeholder="Your email or username">
+        <label for="password">Your password:</label>
+        <input type="password" name="password" id="user-password" placeholder="Password">
+      </fieldset>
+      <button id="login-btn" class="login-btn" >Login</button>
+    </div>
+  <div id="register">   
+    <fieldset>
+      <legend>Register for an account</legend>
+      <label for="email-register">Your email:</label>
+      <input type="email-register" name="email-register" id="email-register" placeholder="Your email">
+      <label for="username-register">Choose a username:</label>
+      <input type="username-register" name="username-register" id="username-register" placeholder="Your username">
+      <label for="password-register">Create a password:</label>
+      <input type="password" name="password-register" id="password-register" placeholder="At least 6 symbols">
+    </fieldset>
+    <button id="register-btn" class="register-btn" >Register</button>
+  </div>
+</header>
+<main>
+  <div id="welcome-page">
+    <button id="logout-btn">Logout</button>
+    <h2></h2>
+    <div class="reading-list-promt">
+      <h3>Your reading list</h3>
+      <button id="sort-author-btn">Sort by Author A-Z</button>
+      <button id="sort-title-btn">Sort by Title A-Z</button>
+    </div>
+    <fieldset id="to-read-container"></fieldset>
+  </div>
+  <section id="books-container">
+  </section>
+</main>
+</body>
+</html>

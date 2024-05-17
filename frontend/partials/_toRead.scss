@@ -1,0 +1,25 @@
+@import "./variables";
+@import "./mixins";
+
+.reading-list-promt{
+  display: flex;
+  flex-flow: row wrap;
+  // justify-content: space-between;
+  gap: 1em;
+  margin: 1em;
+  button {
+    @include button-style(1em, 1em, 5px);
+  }
+}
+#to-read-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  margin: 1em;
+  gap: 1em;
+  .book-card {
+    img {
+      display: none;
+    }
+  }
+}

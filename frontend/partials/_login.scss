@@ -1,0 +1,33 @@
+@import "./variables";
+@import "./mixins";
+
+#login-wrapper{
+  flex-wrap: wrap;
+}
+
+#login, #register {
+  display: flex;
+  margin: 1em;
+  align-items: center;
+
+  fieldset {
+    @include fieldset-style;
+  }
+
+  button {
+    @include button-style(2.5em, 2em, 50%);
+  }
+}
+
+#register{ 
+  button{
+    @include button-style(3em, 2em, 50%); 
+  }
+}
+  
+
+#logout-btn{
+  @include button-style(1em, 2em, 5px);
+  position: fixed;
+  right: 3%;
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "displays",
+  "info": {
+    "singularName": "display",
+    "pluralName": "displays",
+    "displayName": "Display",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "theme": {
+      "type": "enumeration",
+      "enum": [
+        "dark-mode",
+        "summer",
+        "winter"
+      ],
+      "default": "dark-mode"
+    }
+  }
+}

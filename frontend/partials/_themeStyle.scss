@@ -1,0 +1,54 @@
+@import "./variables";
+
+// Define base theme variables
+$winter: (
+  background-color: #ffffff,
+  text-color: $text-color-winter,
+  primary-color: $primary-color-winter,
+  background-image: url(/image/freepik-s.salvador.jpg),
+  background-repeat: no-repeat,
+  background-position: center center,
+  background-size: cover,
+  book-card-bg: $card-background-winter,
+  book-card-text: $card-text-color-winter,
+  book-card-shadow: $card-shadow-winter,
+
+  button-color: $btn-color-winter,
+  button-text: $btn-text-winter,
+  background-hover: $btn-hover-bg-winter
+);
+
+$dark-mode: (
+  background-color: $background-dark,
+  text-color: $text-color-dark,
+  primary-color: $primary-color-dark,
+  background-image: url(/image/freepik-pikisuperstar.jpg),
+  background-repeat: no-repeat,
+  background-position: center center,
+  background-size: cover,
+  book-card-bg: $card-background-dark,
+  book-card-text: $card-text-color-dark,
+  book-card-shadow: $card-shadow-dark,
+
+  button-color: $btn-color-dark,
+  button-text: $btn-text-dark,
+  background-hover: $btn-hover-bg-dark
+);
+
+$summer: (  
+  background-color: $background-summer,
+  background-image: url(/image/freepik-coolvector.jpg),
+  background-repeat: no-repeat,
+  // background-position: center center,
+  background-size: cover,
+  text-color: $text-color-summer,
+  primary-color: $primary-color-summer,
+
+  book-card-bg: $card-background-summer,
+  book-card-text: $card-text-color-summer,
+  book-card-shadow: $card-shadow-summer,
+
+  button-color: $btn-color-summer,
+  button-text: $btn-text-summer,
+  background-hover: $btn-hover-bg-winter
+);

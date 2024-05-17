@@ -1,0 +1,44 @@
+@import "./partials/variables";
+@import "./partials/themeStyle";
+@import "./partials/bookCard";
+@import "./partials/login";
+@import "./partials/toRead";
+@import "./partials/mixins";
+
+
+body {
+  @include apply-theme($summer); // Default theme
+}
+.winter {
+  @include apply-theme($winter);
+}
+
+.dark-mode {
+  @include apply-theme($dark-mode);
+}
+
+.summer {
+  @include apply-theme($summer);
+}
+
+#books-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  gap: 1em;
+}
+#logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8em;
+  // position: absolute; 
+  // top: 0;
+  width: 100%;
+  background-color: #ffffff87; 
+  z-index: 1000;
+  #logo-img{
+    height: 100%;
+  }
+}
+

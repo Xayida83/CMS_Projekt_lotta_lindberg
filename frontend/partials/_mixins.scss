@@ -1,0 +1,57 @@
+@import "./variables";
+
+@mixin apply-theme($theme) {
+  font-family: $text-family;
+  background-color: map-get($theme, background-color);
+  background-image: map-get($theme, background-image);
+  background-repeat: map-get($theme, background-repeat);
+  background-position: map-get($theme, background-position);
+  background-size: map-get($theme, background-size);
+  color: map-get($theme, text-color);
+  .book-card{
+    background-color: map-get($theme, book-card-bg);
+    color: map-get($theme, book-card-text);
+    box-shadow: map-get( $theme, book-card-shadow);
+    .book-details{
+      .read-btn {
+      background-color: map-get($theme, button-color);
+      color: map-get($theme, button-text);
+      }
+      .read-btn:hover {
+        background-color: map-get($theme, background-hover )
+      }
+    }    
+  }
+}
+
+@mixin fieldset-style {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  gap: 1em;
+  padding: 1em;
+  margin: 1em;
+
+  input {
+    border-radius: 5px;
+    padding: 0.5em;
+  }
+}
+
+@mixin button-style($padding-y, $padding-x, $border-radius) {
+  padding: $padding-y $padding-x;
+  border-radius: $border-radius;
+  font-family: $text-family;
+  font-weight: 700;
+  &:hover {
+    background-color: $btn-hover-bg-color;
+  }
+}
+
+// @mixin button-common {
+//   font-family: $text-family;
+//   font-weight: 700;
+//   &:hover {
+//     background-color: $btn-hover-bg-color;
+//   }
+// }
