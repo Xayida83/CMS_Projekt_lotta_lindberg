@@ -71,6 +71,12 @@
       "relation": "manyToMany",
       "target": "api::book.book",
       "mappedBy": "users"
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

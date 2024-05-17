@@ -156,7 +156,7 @@ body {
   color: #472d30;
 }
 body .book-card {
-  background-color: #95bfae;
+  background-color: rgba(149, 191, 174, 0.96);
   color: #ad6b21;
   box-shadow: 10px 10px 20px rgb(203, 238, 221);
 }
@@ -178,7 +178,7 @@ body .book-card .book-details .read-btn:hover {
   color: #000000;
 }
 .winter .book-card {
-  background-color: hsl(204.32, 64.91%, 88.82%);
+  background-color: rgba(208, 230, 245, 0.84);
   color: #003049;
   box-shadow: 10px 10px 20px rgba(0, 150, 136, 0.69);
 }
@@ -221,7 +221,7 @@ body .book-card .book-details .read-btn:hover {
   color: #472d30;
 }
 .summer .book-card {
-  background-color: #95bfae;
+  background-color: rgba(149, 191, 174, 0.96);
   color: #ad6b21;
   box-shadow: 10px 10px 20px rgb(203, 238, 221);
 }
