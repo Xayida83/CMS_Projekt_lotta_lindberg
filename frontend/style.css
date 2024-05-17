@@ -7,7 +7,7 @@
   border: 0.5rem solid;
 }
 .book-card .book-details {
-  padding: min(2rem, 5vw) min(2rem, 5vw) min(2.5rem, 5vw);
+  padding: 1em;
   flex: 1 0 50%;
 }
 .book-card .book-details .read-btn {
@@ -34,6 +34,7 @@
 }
 .book-card .rating {
   width: 17em;
+  margin: 1em;
 }
 .book-card .rating .star-rating {
   white-space: nowrap;
@@ -81,6 +82,7 @@
   gap: 1em;
   padding: 1em;
   margin: 1em;
+  font-weight: 700;
 }
 #login fieldset input, #register fieldset input {
   border-radius: 5px;

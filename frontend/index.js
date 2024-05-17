@@ -149,24 +149,24 @@ let createBookCards = (books, container) => {
         <p>Release Date: ${new Date(book.releaseDate).toDateString()}</p>
         <p>Avrage rating: ${averageRating}</p>
         <div class="rating">
-          <p>Rating: <span class="star-rating">
-            <label for="rate-1" style="--i:1"><i class="fa-solid fa-star"></i></label>
-            <input type="radio" name="rating" id="rate-1" value="1">
-            <label for="rate-2" style="--i:2"><i class="fa-solid fa-star"></i></label>
-            <input type="radio" name="rating" id="rate-2" value="2">
-            <label for="rate-3" style="--i:3"><i class="fa-solid fa-star"></i></label>
-            <input type="radio" name="rating" id="rate-3" value="3">
-            <label for="rate-4" style="--i:4"><i class="fa-solid fa-star"></i></label>
-            <input type="radio" name="rating" id="rate-4" value="4">
-            <label for="rate-5" style="--i:5"><i class="fa-solid fa-star"></i></label>
-            <input type="radio" name="rating" id="rate-5" value="5">
-          </span></p>
-        </div>
-          <button class="read-btn"><i class="fa-solid fa-book-open-reader"> Read it</i></button>
-        
+          <span class="star-rating">
+            ${[1, 2, 3, 4, 5].map(i => `
+              <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}">
+              <label for="rate-${book.id}-${i}" style="--i:${i}"><i class="fa-solid fa-star"></i></label>
+            `).join('')}
+          </span>
+        </div>        
+        <button class="read-btn"><i class="fa-solid fa-book-open-reader"> Read it</i></button>        
       </div>
     `;
     container.append(bookCard);
+
+    const ratingInputs = bookCard.querySelectorAll(`input[name="rating-${book.id}"]`);
+    ratingInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        rateBook(book.id, this.value);
+      });
+    });
 
     const readBtn = bookCard.querySelector(".read-btn");
     readBtn.addEventListener("click", function() {

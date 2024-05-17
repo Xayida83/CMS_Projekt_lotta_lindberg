@@ -9,7 +9,8 @@
   
   .book-details{
     // margin: min(1.5rem, 2.5vw) 0 0 0;
-    padding: min(2rem, 5vw) min(2rem, 5vw) min(2.5rem, 5vw);
+    // padding: min(2rem, 5vw) min(2rem, 5vw) min(2.5rem, 5vw);
+    padding: 1em;
 	  flex: 1 0 50%;
     
     .read-btn {
@@ -36,6 +37,7 @@
   }
   .rating {
     width: 17em;
+    margin: 1em;
     .star-rating {
       	white-space: nowrap;
       }
