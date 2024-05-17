@@ -151,8 +151,8 @@ let createBookCards = (books, container) => {
         <div class="rating">
           <span class="star-rating">
             ${[1, 2, 3, 4, 5].map(i => `
-              <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}">
-              <label for="rate-${book.id}-${i}" style="--i:${i}"><i class="fa-solid fa-star"></i></label>
+            <label for="rate-${book.id}-${i}" style="--i:${i}"><i class="fa-solid fa-star"></i></label>  
+            <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}">              
             `).join('')}
           </span>
         </div>        
