@@ -95,7 +95,7 @@ let renderPage = async () => {
     document.querySelector("#welcome-page h2").innerText = `Welcome, ${
       JSON.parse(sessionStorage.getItem("user")).username
     } !`;
-
+      getRatings();
       displayUserBooks();
 
   } else {
@@ -266,6 +266,7 @@ let addToReadingList = async (bookId) => {
 
 let displayUserBooks = async () => {
   const user = await getLoggedInUser();
+  
   if (user && user.books) {
     const books = user.books;
     renderBooks(books);
@@ -316,8 +317,14 @@ let sortBooksByTitle = async () => {
 
 //*_____________Rating__________________
 let getRatings = async () => {
+  const user = await getLoggedInUser();
+  if (!user || !user.id) {
+    console.error("No user logged in.");
+    return;
+  } 
+
   try {
-    let response = await axios.get("http://localhost:1337/api/ratings?populate=*", {
+    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&populate=book`, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
@@ -334,19 +341,70 @@ let getRatings = async () => {
 }
 
 
+// let rateBook = async (bookId, value) => {
+//   const user = await getLoggedInUser();
+  
+//   if (!user || !user.id) {
+//     alert("Please log in to rate books.");
+//     return;
+//   }  
+  
+//   console.log("HERE", "user:", user.id, "book:", bookId, "value:", value);
+//   try {
+//     await axios.post("http://localhost:1337/api/ratings", {
+//       data: {
+//         value: value,
+//         user: {
+//           connect: [user.id]
+//         },
+//         book: {
+//           connect: [bookId]
+//         },
+//       }, headers: {
+//         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+//       }
+//     });
+//     console.log("Rating created successfully");
+//   } catch (error) {
+//     console.error("Failed to do a rating:", error.response?.data || error.message);
+//   }
+// }
+
 let rateBook = async (bookId, value) => {
   const user = await getLoggedInUser();
-  
+
   if (!user || !user.id) {
     alert("Please log in to rate books.");
     return;
   }
-  
-  const userId = user.id;
-  
-  console.log("HERE", userId, bookId, value);
+
+  console.log("HERE", "user:", user.id, "book:", bookId, "value:", value);
+
   try {
-    await axios.post("http://localhost:1337/api/ratings", {
+    // Kontrollera om användaren redan har betygsatt boken
+    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&filters[book][id][$eq]=${bookId}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    const existingRating = response.data.data[0];
+
+    if (existingRating) {
+      // Uppdatera befintligt betyg
+      await axios.put(`http://localhost:1337/api/ratings/${existingRating.id}`, {
+        data: {
+          value: value,
+        },
+      }, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+      console.log("Rating updated successfully");
+    } else {
+      // Skapa nytt betyg
+      await axios.post("http://localhost:1337/api/ratings", {
       data: {
         value: value,
         user: {
@@ -359,10 +417,22 @@ let rateBook = async (bookId, value) => {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       }
     });
-    console.log("Rating created successfully");
+      console.log("Rating created successfully");
+    }
   } catch (error) {
     console.error("Failed to do a rating:", error.response?.data || error.message);
   }
+}
+
+
+let changeRating = async (ratingId) => {
+  user = await getLoggedInUser();
+
+  if (!user || !user.id) {
+    alert("Please log in to rate books.");
+    return;
+  }
+  
 }
 
 
