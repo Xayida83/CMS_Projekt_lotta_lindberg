@@ -334,7 +334,7 @@ let sortBooksByTitle = async () => {
 let getRatings = async () => {
   const user = await getLoggedInUser();
   if (!user || !user.id) {
-    console.error("No user logged in.", error);
+    console.error("No user logged in.");
     return;
   } 
 
