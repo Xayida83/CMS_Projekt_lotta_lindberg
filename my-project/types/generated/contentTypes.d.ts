@@ -445,15 +445,15 @@ export interface ApiRatingRating extends Schema.CollectionType {
   };
   attributes: {
     value: Attribute.Integer & Attribute.Required;
-    users_permissions_user: Attribute.Relation<
-      'api::rating.rating',
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
     book: Attribute.Relation<
       'api::rating.rating',
       'manyToOne',
       'api::book.book'
+    >;
+    user: Attribute.Relation<
+      'api::rating.rating',
+      'manyToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -853,7 +853,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &

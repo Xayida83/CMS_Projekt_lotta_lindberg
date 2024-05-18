@@ -16,16 +16,16 @@
       "type": "integer",
       "required": true
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "ratings"
-    },
     "book": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::book.book",
+      "inversedBy": "ratings"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
       "inversedBy": "ratings"
     }
   }
