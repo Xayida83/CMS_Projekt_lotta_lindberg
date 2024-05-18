@@ -8,6 +8,11 @@
   background-position: map-get($theme, background-position);
   background-size: map-get($theme, background-size);
   color: map-get($theme, text-color);
+  h2 {
+    font-size: 34px;
+    color: purple;
+  }
+  
   .book-item {
     background-color: map-get($theme, book-card-bg);
     color: map-get($theme, book-card-text);
@@ -70,8 +75,13 @@
   overflow: hidden;
   border: 0.5rem solid;
   .book-details {
+    display: flex;
+    flex-direction: column;
     padding: 1em;
     flex: 1 0 50%;
+    p {
+      margin: 0.5em;
+    }
   }
   .read-btn {
     width: 70%;
@@ -82,16 +92,11 @@
     left: 13%;
     border: none;
     border-radius: 5px;
+    
     i {
       display: flex;
       gap: 1em;
     }
   }
 }
-// @mixin button-common {
-//   font-family: $text-family;
-//   font-weight: 700;
-//   &:hover {
-//     background-color: $btn-hover-bg-color;
-//   }
-// }
+
