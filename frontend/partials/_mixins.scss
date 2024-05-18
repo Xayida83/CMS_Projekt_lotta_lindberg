@@ -8,11 +8,18 @@
   background-position: map-get($theme, background-position);
   background-size: map-get($theme, background-size);
   color: map-get($theme, text-color);
-  h2 {
-    font-size: 34px;
-    color: purple;
+  h1 {
+    font-size: $h1-size;
   }
-  
+  h2{
+    font-size: $h2-size;
+  }
+  h3{
+    font-size: $h3-size;
+  }
+  h4{
+    font-size: $h4-size;
+  }
   .book-item {
     background-color: map-get($theme, book-card-bg);
     color: map-get($theme, book-card-text);
@@ -26,7 +33,7 @@
       }
     }   
   }
-  .book-card{
+  .book-card {
     background-color: map-get($theme, book-card-bg);
     color: map-get($theme, book-card-text);
     box-shadow: map-get( $theme, book-card-shadow);
@@ -67,10 +74,10 @@
   }
 }
 
-@mixin bookCard () {
+@mixin bookCard ($width) {
   display: flex;
   flex-wrap: wrap;
-  max-width: 20em;
+  width: $width;
   border-radius: 0.8rem;
   overflow: hidden;
   border: 0.5rem solid;

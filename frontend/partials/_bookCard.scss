@@ -2,7 +2,7 @@
 @import "./mixins";
 
 .book-card {
-  @include bookCard;  
+  @include bookCard(20em);  
 
   img {
     aspect-ratio: 3 / 2;
@@ -50,5 +50,9 @@
 }
 
 .book-item {
-  @include bookCard;
+  @include bookCard(15em);
+  padding: 0;
+  h4{
+    margin: 0;
+  } 
 }

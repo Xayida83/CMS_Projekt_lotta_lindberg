@@ -1,7 +1,7 @@
 .book-card {
   display: flex;
   flex-wrap: wrap;
-  max-width: 20em;
+  width: 20em;
   border-radius: 0.8rem;
   overflow: hidden;
   border: 0.5rem solid;
@@ -76,10 +76,11 @@
 .book-item {
   display: flex;
   flex-wrap: wrap;
-  max-width: 20em;
+  width: 15em;
   border-radius: 0.8rem;
   overflow: hidden;
   border: 0.5rem solid;
+  padding: 0;
 }
 .book-item .book-details {
   display: flex;
@@ -103,6 +104,9 @@
 .book-item .read-btn i {
   display: flex;
   gap: 1em;
+}
+.book-item h4 {
+  margin: 0;
 }
 
 #login-wrapper {
@@ -194,9 +198,17 @@ body {
   background-size: cover;
   color: #472d30;
 }
-body h2 {
+body h1 {
   font-size: 34px;
-  color: purple;
+}
+body h2 {
+  font-size: 28px;
+}
+body h3 {
+  font-size: 18px;
+}
+body h4 {
+  font-size: 16px;
 }
 body .book-item {
   background-color: rgba(149, 191, 174, 0.96);
@@ -231,9 +243,17 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #000000;
 }
-.winter h2 {
+.winter h1 {
   font-size: 34px;
-  color: purple;
+}
+.winter h2 {
+  font-size: 28px;
+}
+.winter h3 {
+  font-size: 18px;
+}
+.winter h4 {
+  font-size: 16px;
 }
 .winter .book-item {
   background-color: rgba(208, 230, 245, 0.84);
@@ -268,9 +288,17 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #ffffff;
 }
-.dark-mode h2 {
+.dark-mode h1 {
   font-size: 34px;
-  color: purple;
+}
+.dark-mode h2 {
+  font-size: 28px;
+}
+.dark-mode h3 {
+  font-size: 18px;
+}
+.dark-mode h4 {
+  font-size: 16px;
 }
 .dark-mode .book-item {
   background-color: #2b2b2b;
@@ -304,9 +332,17 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #472d30;
 }
-.summer h2 {
+.summer h1 {
   font-size: 34px;
-  color: purple;
+}
+.summer h2 {
+  font-size: 28px;
+}
+.summer h3 {
+  font-size: 18px;
+}
+.summer h4 {
+  font-size: 16px;
 }
 .summer .book-item {
   background-color: rgba(149, 191, 174, 0.96);

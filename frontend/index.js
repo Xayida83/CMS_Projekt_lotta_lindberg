@@ -92,7 +92,7 @@ let renderPage = async () => {
   if (isLoggedIn) {
     document.querySelector("#login-wrapper").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
-    document.querySelector("#welcome-page h2").innerText = `Welcome, ${
+    document.querySelector("#welcome-page h1").innerText = `Welcome, ${
       JSON.parse(sessionStorage.getItem("user")).username
     } !`;
       getRatings();
