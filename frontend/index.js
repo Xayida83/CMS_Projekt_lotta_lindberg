@@ -72,14 +72,14 @@ let checkIfLoggedIn = async () => {
   }
 };
 
-let getLoggedInUser = async () => {
+ let getLoggedInUser = async () => {
   try {
     let response = await axios.get("http://localhost:1337/api/users/me?populate=*", {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
-    console.log(response.data)
+    console.log("LOGGED IN", response.data)
     return response.data; 
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -95,7 +95,7 @@ let renderPage = async () => {
     document.querySelector("#welcome-page h2").innerText = `Welcome, ${
       JSON.parse(sessionStorage.getItem("user")).username
     } !`;
-
+      getRatings();
       displayUserBooks();
 
   } else {
@@ -107,38 +107,64 @@ let renderPage = async () => {
 
 //*_________Books____________
 
-// const readBooksContainer = document.querySelector("#to-read-container");
-
 let fetchBooks = async () => {
   try {
     const response = await axios.get('http://localhost:1337/api/books?populate=*');
-    const books = response.data.data.map(book => ({
-      id: book.id,
-      title: book.attributes.title,
-      author: book.attributes.author,
-      pages: book.attributes.pages,
-      releaseDate: book.attributes.releaseDate,
-      totalScore: book.attributes.totalScore,
-      ratingCount: book.attributes.ratingCount,
-      image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
-    }));
+    console.log("BOOKS:", response.data);
+    const books = response.data.data.map(book => {
+      const ratings = book.attributes.ratings.data;
+      const totalScore = ratings.reduce((sum, rating) => sum + rating.attributes.value, 0);
+      const averageRating = ratings.length > 0 ? (totalScore / ratings.length).toFixed(2) : "No Score";
+      return {
+        id: book.id,
+        title: book.attributes.title,
+        author: book.attributes.author,
+        pages: book.attributes.pages,
+        releaseDate: book.attributes.releaseDate,
+        averageRating: averageRating,
+        image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
+      };
+    });
     console.log(books);
     return books;
   } catch (error) {
     console.error("Failed to fetch books:", error);
     return [];
-  }  
+  }
 };
 
-let createBookCards = (books, container) => {
-  books.forEach(book => {
+// let fetchBooks = async () => {
+//   try {
+//     const response = await axios.get('http://localhost:1337/api/books?populate=*');
+//     const books = response.data.data.map(book => ({
+//       id: book.id,
+//       title: book.attributes.title,
+//       author: book.attributes.author,
+//       pages: book.attributes.pages,
+//       releaseDate: book.attributes.releaseDate,
+//       totalScore: book.attributes.totalScore,
+//       ratingCount: book.attributes.ratingCount,
+//       image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
+//     }));
+//     console.log(books);
+//     return books;
+//   } catch (error) {
+//     console.error("Failed to fetch books:", error);
+//     return [];
+//   }  
+// };
 
+let createBookCards = (books, container) => {
+  const ratings = JSON.parse(sessionStorage.getItem("ratings")) || [];
+
+  books.forEach(book => {
     const bookCard = document.createElement("div");
-    bookCard.className = "book-card";
-    // bookCard.dataset.bookId = book.id;  
+    bookCard.className = "book-card"; 
     bookCard.id=`${book.id}`
 
-    const averageRating = book.ratingCount > 0 ? (book.totalScore / book.ratingCount).toFixed(2) : "No Score";
+      // Kontrollera om användaren har gett ett betyg på boken
+      const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+      const userRatingValue = userRating ? userRating.attributes.value : null;
 
     bookCard.innerHTML = `
       <img src="//localhost:1337${book.image}" alt="${book.title}" class="book-image">
@@ -147,12 +173,12 @@ let createBookCards = (books, container) => {
         <p>Author: ${book.author}</p>
         <p>Pages: ${book.pages}</p>
         <p>Release Date: ${new Date(book.releaseDate).toDateString()}</p>
-        <p>Avrage rating: ${averageRating}</p>
+        <p class="average-rating">Average rating: ${book.averageRating}</p>
         <div class="rating">
           <span class="star-rating">
             ${[1, 2, 3, 4, 5].map(i => `
-              <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}">
               <label for="rate-${book.id}-${i}" style="--i:${i}"><i class="fa-solid fa-star"></i></label>
+              <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}" ${userRatingValue === i ? 'checked' : ''}>
             `).join('')}
           </span>
         </div>        
@@ -166,7 +192,7 @@ let createBookCards = (books, container) => {
       input.addEventListener('change', function() {
         rateBook(book.id, this.value);
       });
-    });
+    });    
 
     const readBtn = bookCard.querySelector(".read-btn");
     readBtn.addEventListener("click", function() {
@@ -174,10 +200,34 @@ let createBookCards = (books, container) => {
     });
   });
 };
+let createBookList = (books, container) => {
+  container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
+  
+  books.forEach(book => {
+    const bookItem = document.createElement("ul");
+    bookItem.className = "book-item"; 
+    bookItem.id = `${book.id}-list`;
+
+    bookItem.innerHTML = `
+      <li class="book-details">
+        <h4>Title: ${book.title}</h3>
+        <p>Author: ${book.author}</p>
+        <button class="read-btn">Remove</button>
+      </li>
+    `;
+    container.append(bookItem);
+
+    const readBtn = bookItem.querySelector(".read-btn");
+    readBtn.addEventListener("click", function() {
+      addToReadingList(book.id);
+    });
+  });
+};
+
 let renderBooks = (books) => {
   const readBooksContainer = document.querySelector("#to-read-container");
   readBooksContainer.innerHTML = "";
-  createBookCards(books, readBooksContainer);
+  createBookList(books, readBooksContainer)
   console.log("Books rendered:", books);
 };
 
@@ -231,6 +281,7 @@ let addToReadingList = async (bookId) => {
 
 let displayUserBooks = async () => {
   const user = await getLoggedInUser();
+  
   if (user && user.books) {
     const books = user.books;
     renderBooks(books);
@@ -238,8 +289,6 @@ let displayUserBooks = async () => {
     console.log("No books were found for the user");
   }
 };
-
-
 
 let sortBooksByAuthor = async () => {
   const user = await getLoggedInUser();
@@ -281,12 +330,94 @@ let sortBooksByTitle = async () => {
   }
 };
 
+//*_____________Rating__________________
+let getRatings = async () => {
+  const user = await getLoggedInUser();
+  if (!user || !user.id) {
+    console.error("No user logged in.", error);
+    return;
+  } 
+
+  try {
+    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&populate=book`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    console.log("RATINGS", response.data.data)
+    const ratings = response.data.data;
+    sessionStorage.setItem("ratings", JSON.stringify(ratings));
+
+  } catch (error) {
+    console.error("Failed to fetch ratings:", error);
+    return null; 
+  }
+}
+
+
+let rateBook = async (bookId, value) => {
+  const user = await getLoggedInUser();
+
+  if (!user || !user.id) {
+    alert("Please log in to rate books.");
+    return;
+  }
+
+  console.log("HERE", "user:", user.id, "book:", bookId, "value:", value);
+
+  try {
+    // Kontrollera om användaren redan har betygsatt boken
+    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&filters[book][id][$eq]=${bookId}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    const existingRating = response.data.data[0];
+
+    if (existingRating) {
+      // Uppdatera befintligt betyg
+      await axios.put(`http://localhost:1337/api/ratings/${existingRating.id}`, {
+        data: {
+          value: value,
+        },
+      }, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+      console.log("Rating updated successfully");
+    } else {
+      // Skapa nytt betyg
+      await axios.post("http://localhost:1337/api/ratings", {
+      data: {
+        value: value,
+        user: {
+          connect: [user.id]
+        },
+        book: {
+          connect: [bookId]
+        },
+      }, headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      }
+    });
+      console.log("Rating created successfully");
+    }
+  } catch (error) {
+    console.error("Failed to do a rating:", error.response?.data || error.message);
+  }
+}
+
+
 //* Event listeners for sort buttons
 document.getElementById('sort-author-btn').addEventListener('click', sortBooksByAuthor);
 document.getElementById('sort-title-btn').addEventListener('click', sortBooksByTitle);
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   fetchTheme();
+  await getRatings();
   renderPage();
   displayAllBooks();
 });

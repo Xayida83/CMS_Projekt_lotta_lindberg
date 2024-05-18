@@ -386,6 +386,11 @@ export interface ApiBookBook extends Schema.CollectionType {
       'manyToMany',
       'plugin::users-permissions.user'
     >;
+    ratings: Attribute.Relation<
+      'api::book.book',
+      'oneToMany',
+      'api::rating.rating'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -420,6 +425,47 @@ export interface ApiDisplayDisplay extends Schema.SingleType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::display.display',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRatingRating extends Schema.CollectionType {
+  collectionName: 'ratings';
+  info: {
+    singularName: 'rating';
+    pluralName: 'ratings';
+    displayName: 'rating';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    value: Attribute.Integer & Attribute.Required;
+    book: Attribute.Relation<
+      'api::rating.rating',
+      'manyToOne',
+      'api::book.book'
+    >;
+    user: Attribute.Relation<
+      'api::rating.rating',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::rating.rating',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::rating.rating',
       'oneToOne',
       'admin::user'
     > &
@@ -807,7 +853,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -841,6 +886,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::book.book'
     >;
+    ratings: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::rating.rating'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -870,6 +920,7 @@ declare module '@strapi/types' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::book.book': ApiBookBook;
       'api::display.display': ApiDisplayDisplay;
+      'api::rating.rating': ApiRatingRating;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;

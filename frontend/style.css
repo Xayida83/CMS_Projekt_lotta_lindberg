@@ -10,7 +10,7 @@
   padding: 1em;
   flex: 1 0 50%;
 }
-.book-card .book-details .read-btn {
+.book-card .read-btn {
   width: 70%;
   padding: 0.5em;
   display: flex;
@@ -20,7 +20,7 @@
   border: none;
   border-radius: 5px;
 }
-.book-card .book-details .read-btn i {
+.book-card .read-btn i {
   display: flex;
   gap: 1em;
 }
@@ -64,6 +64,33 @@
   100% {
     transform: translatey(-15%) scale(1.35);
   }
+}
+
+.book-item {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 20em;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  border: 0.5rem solid;
+}
+.book-item .book-details {
+  padding: 1em;
+  flex: 1 0 50%;
+}
+.book-item .read-btn {
+  width: 70%;
+  padding: 0.5em;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  left: 13%;
+  border: none;
+  border-radius: 5px;
+}
+.book-item .read-btn i {
+  display: flex;
+  gap: 1em;
 }
 
 #login-wrapper {
@@ -155,8 +182,19 @@ body {
   background-size: cover;
   color: #472d30;
 }
+body .book-item {
+  background-color: rgba(149, 191, 174, 0.96);
+  color: #ad6b21;
+}
+body .book-item .book-details .read-btn {
+  background-color: #ad6b21;
+  color: #ffffff;
+}
+body .book-item .book-details .read-btn:hover {
+  background-color: #ae80b5;
+}
 body .book-card {
-  background-color: #95bfae;
+  background-color: rgba(149, 191, 174, 0.96);
   color: #ad6b21;
   box-shadow: 10px 10px 20px rgb(203, 238, 221);
 }
@@ -177,8 +215,19 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #000000;
 }
+.winter .book-item {
+  background-color: rgba(208, 230, 245, 0.84);
+  color: #003049;
+}
+.winter .book-item .book-details .read-btn {
+  background-color: hsl(340.83, 41.38%, 65.88%);
+  color: #ffffff;
+}
+.winter .book-item .book-details .read-btn:hover {
+  background-color: #ae80b5;
+}
 .winter .book-card {
-  background-color: hsl(204.32, 64.91%, 88.82%);
+  background-color: rgba(208, 230, 245, 0.84);
   color: #003049;
   box-shadow: 10px 10px 20px rgba(0, 150, 136, 0.69);
 }
@@ -198,6 +247,17 @@ body .book-card .book-details .read-btn:hover {
   background-position: center center;
   background-size: cover;
   color: #ffffff;
+}
+.dark-mode .book-item {
+  background-color: #2b2b2b;
+  color: #a6e1fa;
+}
+.dark-mode .book-item .book-details .read-btn {
+  background-color: #a6e1fa;
+  color: #2b2b2b;
+}
+.dark-mode .book-item .book-details .read-btn:hover {
+  background-color: #59c6f5;
 }
 .dark-mode .book-card {
   background-color: #2b2b2b;
@@ -220,8 +280,19 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #472d30;
 }
+.summer .book-item {
+  background-color: rgba(149, 191, 174, 0.96);
+  color: #ad6b21;
+}
+.summer .book-item .book-details .read-btn {
+  background-color: #ad6b21;
+  color: #ffffff;
+}
+.summer .book-item .book-details .read-btn:hover {
+  background-color: #ae80b5;
+}
 .summer .book-card {
-  background-color: #95bfae;
+  background-color: rgba(149, 191, 174, 0.96);
   color: #ad6b21;
   box-shadow: 10px 10px 20px rgb(203, 238, 221);
 }

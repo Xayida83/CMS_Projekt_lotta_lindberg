@@ -8,6 +8,19 @@
   background-position: map-get($theme, background-position);
   background-size: map-get($theme, background-size);
   color: map-get($theme, text-color);
+  .book-item {
+    background-color: map-get($theme, book-card-bg);
+    color: map-get($theme, book-card-text);
+    .book-details{
+      .read-btn {
+      background-color: map-get($theme, button-color);
+      color: map-get($theme, button-text);
+      }
+      .read-btn:hover {
+        background-color: map-get($theme, background-hover )
+      }
+    }   
+  }
   .book-card{
     background-color: map-get($theme, book-card-bg);
     color: map-get($theme, book-card-text);
@@ -49,6 +62,32 @@
   }
 }
 
+@mixin bookCard () {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 20em;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  border: 0.5rem solid;
+  .book-details {
+    padding: 1em;
+    flex: 1 0 50%;
+  }
+  .read-btn {
+    width: 70%;
+    padding: 0.5em;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    left: 13%;
+    border: none;
+    border-radius: 5px;
+    i {
+      display: flex;
+      gap: 1em;
+    }
+  }
+}
 // @mixin button-common {
 //   font-family: $text-family;
 //   font-weight: 700;
