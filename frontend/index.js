@@ -79,7 +79,7 @@ let checkIfLoggedIn = async () => {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
-    console.log(response.data)
+    console.log("LOGGED IN", response.data)
     return response.data; 
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -107,45 +107,64 @@ let renderPage = async () => {
 
 //*_________Books____________
 
-// const readBooksContainer = document.querySelector("#to-read-container");
-
 let fetchBooks = async () => {
   try {
     const response = await axios.get('http://localhost:1337/api/books?populate=*');
-    const books = response.data.data.map(book => ({
-      id: book.id,
-      title: book.attributes.title,
-      author: book.attributes.author,
-      pages: book.attributes.pages,
-      releaseDate: book.attributes.releaseDate,
-      totalScore: book.attributes.totalScore,
-      ratingCount: book.attributes.ratingCount,
-      image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
-    }));
+    console.log("BOOKS:", response.data);
+    const books = response.data.data.map(book => {
+      const ratings = book.attributes.ratings.data;
+      const totalScore = ratings.reduce((sum, rating) => sum + rating.attributes.value, 0);
+      const averageRating = ratings.length > 0 ? (totalScore / ratings.length).toFixed(2) : "No Score";
+      return {
+        id: book.id,
+        title: book.attributes.title,
+        author: book.attributes.author,
+        pages: book.attributes.pages,
+        releaseDate: book.attributes.releaseDate,
+        averageRating: averageRating,
+        image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
+      };
+    });
     console.log(books);
     return books;
   } catch (error) {
     console.error("Failed to fetch books:", error);
     return [];
-  }  
+  }
 };
+
+// let fetchBooks = async () => {
+//   try {
+//     const response = await axios.get('http://localhost:1337/api/books?populate=*');
+//     const books = response.data.data.map(book => ({
+//       id: book.id,
+//       title: book.attributes.title,
+//       author: book.attributes.author,
+//       pages: book.attributes.pages,
+//       releaseDate: book.attributes.releaseDate,
+//       totalScore: book.attributes.totalScore,
+//       ratingCount: book.attributes.ratingCount,
+//       image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
+//     }));
+//     console.log(books);
+//     return books;
+//   } catch (error) {
+//     console.error("Failed to fetch books:", error);
+//     return [];
+//   }  
+// };
 
 let createBookCards = (books, container) => {
   const ratings = JSON.parse(sessionStorage.getItem("ratings")) || [];
-
 
   books.forEach(book => {
     const bookCard = document.createElement("div");
     bookCard.className = "book-card"; 
     bookCard.id=`${book.id}`
 
-    // Kontrollera om användaren har gett ett betyg på boken
-    
-    const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
-    const userRatingValue = userRating ? userRating.attributes.value : null;
-
-    // const averageRating = book.ratingCount > 0 ? (book.totalScore / book.ratingCount).toFixed(2) : "No Score";
-    // userRating = userRatings.find(rating => rating.book.id === book.id);
+      // Kontrollera om användaren har gett ett betyg på boken
+      const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+      const userRatingValue = userRating ? userRating.attributes.value : null;
 
     bookCard.innerHTML = `
       <img src="//localhost:1337${book.image}" alt="${book.title}" class="book-image">
@@ -154,7 +173,7 @@ let createBookCards = (books, container) => {
         <p>Author: ${book.author}</p>
         <p>Pages: ${book.pages}</p>
         <p>Release Date: ${new Date(book.releaseDate).toDateString()}</p>
-        <p class="average-rating">Avrage rating: </p>
+        <p class="average-rating">Average rating: ${book.averageRating}</p>
         <div class="rating">
           <span class="star-rating">
             ${[1, 2, 3, 4, 5].map(i => `
@@ -189,13 +208,10 @@ let createBookList = (books, container) => {
     bookItem.className = "book-item"; 
     bookItem.id = `${book.id}-list`;
 
-    const averageRating = book.ratingCount > 0 ? (book.totalScore / book.ratingCount).toFixed(2) : "No Score";
-
     bookItem.innerHTML = `
       <li class="book-details">
         <h4>Title: ${book.title}</h3>
         <p>Author: ${book.author}</p>
-        <p>Average rating: ${averageRating}</p>
         <button class="read-btn">Remove</button>
       </li>
     `;
@@ -212,7 +228,6 @@ let renderBooks = (books) => {
   const readBooksContainer = document.querySelector("#to-read-container");
   readBooksContainer.innerHTML = "";
   createBookList(books, readBooksContainer)
-  // createBookCards(books, readBooksContainer);
   console.log("Books rendered:", books);
 };
 
@@ -319,7 +334,7 @@ let sortBooksByTitle = async () => {
 let getRatings = async () => {
   const user = await getLoggedInUser();
   if (!user || !user.id) {
-    console.error("No user logged in.");
+    console.error("No user logged in.", error);
     return;
   } 
 
@@ -340,35 +355,6 @@ let getRatings = async () => {
   }
 }
 
-
-// let rateBook = async (bookId, value) => {
-//   const user = await getLoggedInUser();
-  
-//   if (!user || !user.id) {
-//     alert("Please log in to rate books.");
-//     return;
-//   }  
-  
-//   console.log("HERE", "user:", user.id, "book:", bookId, "value:", value);
-//   try {
-//     await axios.post("http://localhost:1337/api/ratings", {
-//       data: {
-//         value: value,
-//         user: {
-//           connect: [user.id]
-//         },
-//         book: {
-//           connect: [bookId]
-//         },
-//       }, headers: {
-//         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-//       }
-//     });
-//     console.log("Rating created successfully");
-//   } catch (error) {
-//     console.error("Failed to do a rating:", error.response?.data || error.message);
-//   }
-// }
 
 let rateBook = async (bookId, value) => {
   const user = await getLoggedInUser();
@@ -422,17 +408,6 @@ let rateBook = async (bookId, value) => {
   } catch (error) {
     console.error("Failed to do a rating:", error.response?.data || error.message);
   }
-}
-
-
-let changeRating = async (ratingId) => {
-  user = await getLoggedInUser();
-
-  if (!user || !user.id) {
-    alert("Please log in to rate books.");
-    return;
-  }
-  
 }
 
 
