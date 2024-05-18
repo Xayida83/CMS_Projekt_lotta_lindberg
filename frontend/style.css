@@ -7,8 +7,13 @@
   border: 0.5rem solid;
 }
 .book-card .book-details {
+  display: flex;
+  flex-direction: column;
   padding: 1em;
   flex: 1 0 50%;
+}
+.book-card .book-details p {
+  margin: 0.5em;
 }
 .book-card .read-btn {
   width: 70%;
@@ -33,8 +38,10 @@
   height: 20em;
 }
 .book-card .rating {
-  width: 17em;
+  width: -moz-fit-content;
+  width: fit-content;
   margin: 1em;
+  align-self: center;
 }
 .book-card .rating .star-rating {
   white-space: nowrap;
@@ -75,8 +82,13 @@
   border: 0.5rem solid;
 }
 .book-item .book-details {
+  display: flex;
+  flex-direction: column;
   padding: 1em;
   flex: 1 0 50%;
+}
+.book-item .book-details p {
+  margin: 0.5em;
 }
 .book-item .read-btn {
   width: 70%;
@@ -182,6 +194,10 @@ body {
   background-size: cover;
   color: #472d30;
 }
+body h2 {
+  font-size: 34px;
+  color: purple;
+}
 body .book-item {
   background-color: rgba(149, 191, 174, 0.96);
   color: #ad6b21;
@@ -214,6 +230,10 @@ body .book-card .book-details .read-btn:hover {
   background-position: center center;
   background-size: cover;
   color: #000000;
+}
+.winter h2 {
+  font-size: 34px;
+  color: purple;
 }
 .winter .book-item {
   background-color: rgba(208, 230, 245, 0.84);
@@ -248,6 +268,10 @@ body .book-card .book-details .read-btn:hover {
   background-size: cover;
   color: #ffffff;
 }
+.dark-mode h2 {
+  font-size: 34px;
+  color: purple;
+}
 .dark-mode .book-item {
   background-color: #2b2b2b;
   color: #a6e1fa;
@@ -279,6 +303,10 @@ body .book-card .book-details .read-btn:hover {
   background-repeat: no-repeat;
   background-size: cover;
   color: #472d30;
+}
+.summer h2 {
+  font-size: 34px;
+  color: purple;
 }
 .summer .book-item {
   background-color: rgba(149, 191, 174, 0.96);

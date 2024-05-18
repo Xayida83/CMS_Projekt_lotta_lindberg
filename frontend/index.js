@@ -212,7 +212,7 @@ let createBookList = (books, container) => {
       <li class="book-details">
         <h4>Title: ${book.title}</h3>
         <p>Author: ${book.author}</p>
-        <button class="read-btn">Remove</button>
+        <button class="read-btn"><i class="fa-regular fa-trash-can">Remove</i></button>
       </li>
     `;
     container.append(bookItem);
