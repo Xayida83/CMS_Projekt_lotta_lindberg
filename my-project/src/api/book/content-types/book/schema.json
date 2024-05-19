@@ -37,12 +37,6 @@
         "audios"
       ]
     },
-    "totalScore": {
-      "type": "integer"
-    },
-    "raitingCount": {
-      "type": "integer"
-    },
     "users": {
       "type": "relation",
       "relation": "manyToMany",

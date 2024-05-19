@@ -95,8 +95,9 @@ let renderPage = async () => {
     document.querySelector("#welcome-page h1").innerText = `Welcome, ${
       JSON.parse(sessionStorage.getItem("user")).username
     } !`;
-      getRatings();
-      displayUserBooks();
+      await getRatings();
+      await displayUserBooks();
+      await displayAllBooks();
 
   } else {
     document.querySelector("#login-wrapper").style.display = "flex";
@@ -234,6 +235,7 @@ let renderBooks = (books) => {
 let displayAllBooks = async () => {
   const books = await fetchBooks();
   const booksContainer = document.querySelector("#books-container");
+  booksContainer.innerHTML= "";
   createBookCards(books, booksContainer);
 }; 
 

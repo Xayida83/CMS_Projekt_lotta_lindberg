@@ -379,8 +379,6 @@ export interface ApiBookBook extends Schema.CollectionType {
     pages: Attribute.Integer;
     releaseDate: Attribute.Date;
     image: Attribute.Media;
-    totalScore: Attribute.Integer;
-    raitingCount: Attribute.Integer;
     users: Attribute.Relation<
       'api::book.book',
       'manyToMany',
