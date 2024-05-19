@@ -84,6 +84,7 @@
   .book-details {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 1em;
     flex: 1 0 50%;
     p {

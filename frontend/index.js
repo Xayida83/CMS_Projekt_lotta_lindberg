@@ -1,3 +1,28 @@
+const apiBaseURL = 'http://localhost:1337/api';
+
+// Helper function to get authorization headers
+const getAuthHeaders = () => {
+  const token = sessionStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// API call function
+const apiCall = async (method, url, data = null, requiresAuth = true) => {
+  try {
+    const headers = requiresAuth ? getAuthHeaders() : {};
+    const response = await axios({
+      method: method,
+      url: `${apiBaseURL}${url}`,
+      headers: headers,
+      data: data
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to ${method} ${url}:`, error.response?.data || error.message);
+    throw error;
+  }
+};
+
 const loginBtn = document.querySelector("#login-btn");
 const user = document.querySelector("#user-login");
 const password = document.querySelector("#user-password");
@@ -9,44 +34,40 @@ const registerPassword = document.querySelector("#password-register");
 
 const logoutBtn = document.querySelector("#logout-btn");
 
-let login = async () => {
+const login = async () => {
   try {
-    axios.post('http://localhost:1337/api/auth/local', {
-  identifier: user.value,
-  password: password.value,
-})
-.then(response => {
-  console.log('user profile', response.data.user);
-  
-  sessionStorage.setItem("token", response.data.jwt);
-  sessionStorage.setItem("user", JSON.stringify(response.data.user));
- 
-  renderPage();
-})
+    const response = await apiCall('post', '/auth/local', {
+      identifier: user.value,
+      password: password.value,
+    }, false);// requiresAuth = false
+    console.log('user profile', response.user);
+    sessionStorage.setItem("token", response.jwt);
+    sessionStorage.setItem("user", JSON.stringify(response.user));
+    await renderPage();
   } catch (error) {
-    console.log("Error:", error.response)
+    console.log("Error:", error.response);
   }
-}
+};
 
-let register = async () => {
+const register = async () => {
   try {
-    let response = await axios.post('http://localhost:1337/api/auth/local/register', {
+    const response = await apiCall('post', '/auth/local/register', {
       username: registerUser.value,
       email: registerEmail.value,
       password: registerPassword.value,
-    });
+    }, false);  // requiresAuth = false
     console.log("Registered:", response);
-    if (response.statusText = "OK") {
-      alert("You have been registered. Please log in!")
-      console.log("Registered!")
-    } 
+    if (response.statusText === "OK") {
+      alert("You have been registered. Please log in!");
+      console.log("Registered!");
+    }
   } catch (error) {
     console.error("Registration failed:", error.response);
-    alert("Registration failed. Try again!")
+    alert("Registration failed. Try again!");
   }
-}
+};
 
-let logout = () => {
+const logout = () => {
   sessionStorage.clear();
   renderPage();
 };
@@ -55,16 +76,11 @@ loginBtn.addEventListener("click", login);
 registerBtn.addEventListener("click", register);
 logoutBtn.addEventListener("click", logout);
 
-
-let checkIfLoggedIn = async () => {
+const checkIfLoggedIn = async () => {
   const token = sessionStorage.getItem("token");
   if (!token) return false;
   try {
-    await axios.get("http://localhost:1337/api/users/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await apiCall('get', '/users/me');
     return true;
   } catch (error) {
     console.log(error);
@@ -72,20 +88,19 @@ let checkIfLoggedIn = async () => {
   }
 };
 
- let getLoggedInUser = async () => {
+const getLoggedInUser = async () => {
+  const token = sessionStorage.getItem("token");
+  if (!token) return null;
+
   try {
-    let response = await axios.get("http://localhost:1337/api/users/me?populate=*", {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-    console.log("LOGGED IN", response.data)
-    return response.data; 
+    const user = await apiCall('get', '/users/me?populate=*');
+    console.log("LOGGED IN USER:", user);
+    return user;
   } catch (error) {
     console.error("Failed to fetch user:", error);
-    return null; 
+    return null;
   }
-}
+};
 
 let renderPage = async () => {
   let isLoggedIn = await checkIfLoggedIn(); 
@@ -108,12 +123,12 @@ let renderPage = async () => {
 
 //*_________Books____________
 
-let fetchBooks = async () => {
+const fetchBooks = async () => {
   try {
-    const response = await axios.get('http://localhost:1337/api/books?populate=*');
-    console.log("BOOKS:", response.data);
-    const books = response.data.data.map(book => {
-      const ratings = book.attributes.ratings.data;
+    const response = await apiCall('get', '/books?populate=*', null, false);
+    console.log("BOOKS:", response);
+    return response.data.map(book => {
+      const ratings = book.attributes.ratings?.data || [];
       const totalScore = ratings.reduce((sum, rating) => sum + rating.attributes.value, 0);
       const averageRating = ratings.length > 0 ? (totalScore / ratings.length).toFixed(2) : "No Score";
       return {
@@ -126,46 +141,22 @@ let fetchBooks = async () => {
         image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
       };
     });
-    console.log(books);
-    return books;
   } catch (error) {
     console.error("Failed to fetch books:", error);
     return [];
   }
 };
 
-// let fetchBooks = async () => {
-//   try {
-//     const response = await axios.get('http://localhost:1337/api/books?populate=*');
-//     const books = response.data.data.map(book => ({
-//       id: book.id,
-//       title: book.attributes.title,
-//       author: book.attributes.author,
-//       pages: book.attributes.pages,
-//       releaseDate: book.attributes.releaseDate,
-//       totalScore: book.attributes.totalScore,
-//       ratingCount: book.attributes.ratingCount,
-//       image: book.attributes.image.data ? book.attributes.image.data.attributes.formats.small.url : null
-//     }));
-//     console.log(books);
-//     return books;
-//   } catch (error) {
-//     console.error("Failed to fetch books:", error);
-//     return [];
-//   }  
-// };
-
-let createBookCards = (books, container) => {
+const createBookCards = (books, container) => {
   const ratings = JSON.parse(sessionStorage.getItem("ratings")) || [];
 
   books.forEach(book => {
     const bookCard = document.createElement("div");
-    bookCard.className = "book-card"; 
-    bookCard.id=`${book.id}`
+    bookCard.className = "book-card";
+    bookCard.id = `${book.id}`;
 
-      // Kontrollera om användaren har gett ett betyg på boken
-      const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
-      const userRatingValue = userRating ? userRating.attributes.value : null;
+    const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+    const userRatingValue = userRating ? userRating.attributes.value : null;
 
     bookCard.innerHTML = `
       <img src="//localhost:1337${book.image}" alt="${book.title}" class="book-image">
@@ -182,36 +173,37 @@ let createBookCards = (books, container) => {
               <input type="radio" name="rating-${book.id}" id="rate-${book.id}-${i}" value="${i}" ${userRatingValue === i ? 'checked' : ''}>
             `).join('')}
           </span>
-        </div>        
-        <button class="read-btn"><i class="fa-solid fa-book-open-reader"> Read it</i></button>        
+        </div>
+        <button class="read-btn"><i class="fa-solid fa-book-open-reader"> Read it</i></button>
       </div>
     `;
     container.append(bookCard);
 
     const ratingInputs = bookCard.querySelectorAll(`input[name="rating-${book.id}"]`);
     ratingInputs.forEach(input => {
-      input.addEventListener('change', function() {
+      input.addEventListener('change', function () {
         rateBook(book.id, this.value);
       });
-    });    
+    });
 
     const readBtn = bookCard.querySelector(".read-btn");
-    readBtn.addEventListener("click", function() {
+    readBtn.addEventListener("click", function () {
       addToReadingList(book.id);
     });
   });
 };
-let createBookList = (books, container) => {
-  container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
-  
+
+const createBookList = (books, container) => {
+  container.innerHTML = ''; 
+
   books.forEach(book => {
     const bookItem = document.createElement("ul");
-    bookItem.className = "book-item"; 
+    bookItem.className = "book-item";
     bookItem.id = `${book.id}-list`;
 
     bookItem.innerHTML = `
       <li class="book-details">
-        <h4>Title: ${book.title}</h3>
+        <h4>${book.title}</h4>
         <p>Author: ${book.author}</p>
         <button class="read-btn"><i class="fa-regular fa-trash-can">Remove</i></button>
       </li>
@@ -219,23 +211,23 @@ let createBookList = (books, container) => {
     container.append(bookItem);
 
     const readBtn = bookItem.querySelector(".read-btn");
-    readBtn.addEventListener("click", function() {
+    readBtn.addEventListener("click", function () {
       addToReadingList(book.id);
     });
   });
 };
 
-let renderBooks = (books) => {
+const renderBooks = (books) => {
   const readBooksContainer = document.querySelector("#to-read-container");
   readBooksContainer.innerHTML = "";
-  createBookList(books, readBooksContainer)
+  createBookList(books, readBooksContainer);
   console.log("Books rendered:", books);
 };
 
-let displayAllBooks = async () => {
+const displayAllBooks = async () => {
   const books = await fetchBooks();
   const booksContainer = document.querySelector("#books-container");
-  booksContainer.innerHTML= "";
+  booksContainer.innerHTML = ""; 
   createBookCards(books, booksContainer);
 }; 
 
@@ -297,7 +289,6 @@ let sortBooksByAuthor = async () => {
   if (user && user.books) {
     const books = user.books;
 
-    // Sortera böckerna efter författarens namn
     books.sort((a, b) => {
       let authorA = a.author.toLowerCase();
       let authorB = b.author.toLowerCase();
@@ -317,7 +308,6 @@ let sortBooksByTitle = async () => {
   if (user && user.books) {
     const books = user.books;
 
-    // Sortera böckerna efter titel
     books.sort((a, b) => {
       let titleA = a.title.toLowerCase();
       let titleB = b.title.toLowerCase();
@@ -333,106 +323,79 @@ let sortBooksByTitle = async () => {
 };
 
 //*_____________Rating__________________
-let getRatings = async () => {
-  const user = await getLoggedInUser();
-  if (!user || !user.id) {
-    console.error("No user logged in.");
-    return;
-  } 
-
+const getRatings = async () => {
   try {
-    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&populate=book`, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-
-    console.log("RATINGS", response.data.data)
-    const ratings = response.data.data;
-    sessionStorage.setItem("ratings", JSON.stringify(ratings));
-
+    const user = await getLoggedInUser();
+    if (!user || !user.id) {
+      console.error("No user logged in.");
+      return;
+    }
+    // Strapi's filters för att utföra en filtrering av data på servern innan den returneras till klienten
+    // $eq: Detta är en operatör som står för "equal to" (likamed). Det används för att specificera att vi vill matcha exakt på ett visst värde, i detta fall user.id.
+    // populate=book: En parameter som används för att specificera att vi också vill inkludera relaterade book-data i vårt svar.
+    const response = await apiCall('get', `/ratings?filters[user][id][$eq]=${user.id}&populate=book`);
+    console.log("RATINGS", response.data);
+    sessionStorage.setItem("ratings", JSON.stringify(response.data));
   } catch (error) {
     console.error("Failed to fetch ratings:", error);
-    return null; 
   }
-}
+};
 
-
-let rateBook = async (bookId, value) => {
+const rateBook = async (bookId, value) => {
   const user = await getLoggedInUser();
-
   if (!user || !user.id) {
     alert("Please log in to rate books.");
     return;
   }
 
-  console.log("HERE", "user:", user.id, "book:", bookId, "value:", value);
-
   try {
-    // Kontrollera om användaren redan har betygsatt boken
-    let response = await axios.get(`http://localhost:1337/api/ratings?filters[user][id][$eq]=${user.id}&filters[book][id][$eq]=${bookId}`, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-
-    const existingRating = response.data.data[0];
+    // Check if the user has already rated the book
+    const response = await apiCall('get', `/ratings?filters[user][id][$eq]=${user.id}&filters[book][id][$eq]=${bookId}`);
+    const existingRating = response.data[0];
 
     if (existingRating) {
-      // Uppdatera befintligt betyg
-      await axios.put(`http://localhost:1337/api/ratings/${existingRating.id}`, {
-        data: {
-          value: value,
-        },
-      }, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
+      // Update existing rating
+      await apiCall('put', `/ratings/${existingRating.id}`, {
+        data: { value: value },
       });
       console.log("Rating updated successfully");
     } else {
-      // Skapa nytt betyg
-      await axios.post("http://localhost:1337/api/ratings", {
-      data: {
-        value: value,
-        user: {
-          connect: [user.id]
+      // Create new rating
+      await apiCall('post', '/ratings', {
+        data: {
+          value: value,
+          user: { connect: [user.id] },
+          book: { connect: [bookId] },
         },
-        book: {
-          connect: [bookId]
-        },
-      }, headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      }
-    });
+      });
       console.log("Rating created successfully");
     }
   } catch (error) {
     console.error("Failed to do a rating:", error.response?.data || error.message);
   }
-}
+};
 
 
 //* Event listeners for sort buttons
 document.getElementById('sort-author-btn').addEventListener('click', sortBooksByAuthor);
 document.getElementById('sort-title-btn').addEventListener('click', sortBooksByTitle);
 
-document.addEventListener('DOMContentLoaded', async function() {
-  fetchTheme();
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchTheme();
   await getRatings();
-  renderPage();
-  displayAllBooks();
+  await renderPage();
+  await displayAllBooks();
 });
 
 //*___________Theme__________
 
-let fetchTheme = async () => {
+const fetchTheme = async () => {
   try {
-    let response = await axios.get('http://localhost:1337/api/display');
-    let themeName = response.data.data.attributes.theme; 
+    const response = await apiCall('get', '/display');
+    const themeName = response.data.attributes.theme;
     console.log("THEME: ", themeName);
-    document.body.className = themeName;    
+    document.body.className = themeName;
   } catch (error) {
     console.error('Failed to fetch theme:', error);
   }
-}
+};
