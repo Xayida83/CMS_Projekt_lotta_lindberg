@@ -12,14 +12,13 @@
   }
 }
 #to-read-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-evenly;
   margin: 1em;
-  gap: 1em;
-  .book-card {
-    img {
-      display: none;
-    }
+  ul{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 0;
+    gap: 1em;
   }
+  
 }

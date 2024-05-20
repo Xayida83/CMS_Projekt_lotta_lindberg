@@ -102,6 +102,7 @@ const getLoggedInUser = async () => {
   }
 };
 
+
 let renderPage = async () => {
   let isLoggedIn = await checkIfLoggedIn(); 
   if (isLoggedIn) {
@@ -192,30 +193,67 @@ const createBookCards = (books, container) => {
     });
   });
 };
-
 const createBookList = (books, container) => {
-  container.innerHTML = ''; 
+  container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
+
+  const bookList = document.createElement("ul"); // Skapa en ul för hela listan
 
   books.forEach(book => {
-    const bookItem = document.createElement("ul");
+    const bookItem = document.createElement("li");
     bookItem.className = "book-item";
     bookItem.id = `${book.id}-list`;
 
+    const ratings = getRatingsFromSession();
+    const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+    const userRatingValue = userRating ? userRating.attributes.value : "Not rated";
+
     bookItem.innerHTML = `
-      <li class="book-details">
+      <div class="book-details">
         <h4>${book.title}</h4>
         <p>Author: ${book.author}</p>
+        <p>My Rating: ${userRatingValue}</p>
         <button class="read-btn"><i class="fa-regular fa-trash-can">Remove</i></button>
-      </li>
+      </div>
     `;
-    container.append(bookItem);
+    bookList.append(bookItem);
 
     const readBtn = bookItem.querySelector(".read-btn");
     readBtn.addEventListener("click", function () {
       addToReadingList(book.id);
     });
   });
+
+  container.append(bookList); // Lägg till hela ul i containern
 };
+
+// const createBookList = (books, container) => {
+//   container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
+
+//   books.forEach(book => {
+//     const bookItem = document.createElement("ul");
+//     bookItem.className = "book-item";
+//     bookItem.id = `${book.id}-list`;
+
+//     const ratings = getRatingsFromSession();
+//     const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+//     const userRatingValue = userRating ? userRating.attributes.value : "Not rated";
+
+//     bookItem.innerHTML = `
+//       <li class="book-details">
+//         <h4>${book.title}</h4>
+//         <p>Author: ${book.author}</p>
+//         <p>My Rating: ${userRatingValue}</p>
+//         <button class="read-btn"><i class="fa-regular fa-trash-can">Remove</i></button>
+//       </li>
+//     `;
+//     container.append(bookItem);
+
+//     const readBtn = bookItem.querySelector(".read-btn");
+//     readBtn.addEventListener("click", function () {
+//       addToReadingList(book.id);
+//     });
+//   });
+// };
 
 const renderBooks = (books) => {
   const readBooksContainer = document.querySelector("#to-read-container");
@@ -321,6 +359,36 @@ let sortBooksByTitle = async () => {
     console.log("No books were found for the user");
   }
 };
+const sortBooksByUserRating = async () => {
+  const user = await getLoggedInUser();
+  if (!user || !user.id) {
+    console.log("No user logged in or user data is not available");
+    return;
+  }
+
+  if (!user.books || user.books.length === 0) {
+    console.log("No books were found for the user");
+    return;
+  }
+
+  // Get user's ratings
+  const ratings = getRatingsFromSession();
+
+  // Map ratings to books
+  const booksWithRatings = user.books.map(book => {
+    const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
+    return {
+      ...book,
+      userRatingValue: userRating ? userRating.attributes.value : 0
+    };
+  });
+
+  // Sort books based on user ratings (highest to lowest)
+  booksWithRatings.sort((a, b) => b.userRatingValue - a.userRatingValue);
+
+  // Render sorted books
+  renderBooks(booksWithRatings);
+};
 
 //*_____________Rating__________________
 const getRatings = async () => {
@@ -339,6 +407,10 @@ const getRatings = async () => {
   } catch (error) {
     console.error("Failed to fetch ratings:", error);
   }
+};
+// Function to get ratings from sessionStorage
+const getRatingsFromSession = () => {
+  return JSON.parse(sessionStorage.getItem("ratings")) || [];
 };
 
 const rateBook = async (bookId, value) => {
@@ -375,10 +447,10 @@ const rateBook = async (bookId, value) => {
   }
 };
 
-
 //* Event listeners for sort buttons
 document.getElementById('sort-author-btn').addEventListener('click', sortBooksByAuthor);
 document.getElementById('sort-title-btn').addEventListener('click', sortBooksByTitle);
+document.getElementById('sort-rating-btn').addEventListener('click', sortBooksByUserRating);
 
 document.addEventListener('DOMContentLoaded', async () => {
   await fetchTheme();
