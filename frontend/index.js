@@ -46,6 +46,11 @@ const login = async () => {
     await renderPage();
   } catch (error) {
     console.log("Error:", error.response);
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(`Login failed: ${error.response.data.message[0].messages[0].message}`);
+    } else {
+      alert("Login failed");
+    }
   }
 };
 

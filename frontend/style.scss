@@ -8,6 +8,8 @@
 
 body {
   @include apply-theme($summer); // Default theme
+  display: flex;
+  flex-flow: row wrap;
 }
 .winter {
   @include apply-theme($winter);
@@ -21,6 +23,10 @@ body {
   @include apply-theme($summer);
 }
 
+header {
+  max-width: 88%;
+}
+
 #books-container {
   display: flex;
   flex-flow: row wrap;
@@ -29,16 +35,25 @@ body {
 }
 #logo{
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 8em;
-  // position: absolute; 
-  // top: 0;
-  width: 100%;
-  background-color: #ffffff87; 
-  z-index: 1000;
+  height: 10em;
+  margin: 0 1em;
+  width: fit-content;
+  background-color: rgba(255, 255, 255, 0.5294117647);
   #logo-img{
     height: 100%;
   }
 }
-
+h1 {
+  font-size: $h1-size;
+  margin: 0 1em;
+}
+h2 {
+  font-size: $h2-size;
+}
+h3 {
+  font-size: $h3-size;
+}
+h4 {
+  font-size: $h4-size;
+}

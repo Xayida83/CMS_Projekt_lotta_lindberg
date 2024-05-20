@@ -51,7 +51,7 @@
 
 @mixin fieldset-style {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   border-radius: 5px;
   gap: 1em;
   padding: 1em;
