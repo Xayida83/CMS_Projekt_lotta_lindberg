@@ -194,9 +194,9 @@ const createBookCards = (books, container) => {
   });
 };
 const createBookList = (books, container) => {
-  container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
+  container.innerHTML = ''; 
 
-  const bookList = document.createElement("ul"); // Skapa en ul för hela listan
+  const bookList = document.createElement("ul");
 
   books.forEach(book => {
     const bookItem = document.createElement("li");
@@ -223,37 +223,8 @@ const createBookList = (books, container) => {
     });
   });
 
-  container.append(bookList); // Lägg till hela ul i containern
+  container.append(bookList);
 };
-
-// const createBookList = (books, container) => {
-//   container.innerHTML = ''; // Töm behållaren innan du lägger till böckerna
-
-//   books.forEach(book => {
-//     const bookItem = document.createElement("ul");
-//     bookItem.className = "book-item";
-//     bookItem.id = `${book.id}-list`;
-
-//     const ratings = getRatingsFromSession();
-//     const userRating = ratings.find(rating => rating.attributes.book.data.id === book.id);
-//     const userRatingValue = userRating ? userRating.attributes.value : "Not rated";
-
-//     bookItem.innerHTML = `
-//       <li class="book-details">
-//         <h4>${book.title}</h4>
-//         <p>Author: ${book.author}</p>
-//         <p>My Rating: ${userRatingValue}</p>
-//         <button class="read-btn"><i class="fa-regular fa-trash-can">Remove</i></button>
-//       </li>
-//     `;
-//     container.append(bookItem);
-
-//     const readBtn = bookItem.querySelector(".read-btn");
-//     readBtn.addEventListener("click", function () {
-//       addToReadingList(book.id);
-//     });
-//   });
-// };
 
 const renderBooks = (books) => {
   const readBooksContainer = document.querySelector("#to-read-container");
@@ -359,6 +330,7 @@ let sortBooksByTitle = async () => {
     console.log("No books were found for the user");
   }
 };
+
 const sortBooksByUserRating = async () => {
   const user = await getLoggedInUser();
   if (!user || !user.id) {
