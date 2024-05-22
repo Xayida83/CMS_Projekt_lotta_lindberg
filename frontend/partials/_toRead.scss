@@ -4,11 +4,12 @@
 .reading-list-promt{
   display: flex;
   flex-flow: row wrap;
-  // justify-content: space-between;
+  align-items: center;
   gap: 1em;
   margin: 1em;
   button {
     @include button-style(1em, 1em, 5px);
+    height: fit-content;
   }
 }
 #to-read-container {

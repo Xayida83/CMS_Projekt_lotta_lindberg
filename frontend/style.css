@@ -122,7 +122,7 @@
 }
 #login fieldset, #register fieldset {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   border-radius: 5px;
   gap: 1em;
   padding: 1em;
@@ -168,6 +168,7 @@
 .reading-list-promt {
   display: flex;
   flex-flow: row wrap;
+  align-items: center;
   gap: 1em;
   margin: 1em;
 }
@@ -176,6 +177,8 @@
   border-radius: 5px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 700;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .reading-list-promt button:hover {
   background-color: blanchedalmond;
@@ -198,6 +201,8 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   color: #472d30;
+  display: flex;
+  flex-flow: row wrap;
 }
 body h1 {
   font-size: 34px;
@@ -369,6 +374,10 @@ body .book-card .book-details .read-btn:hover {
   background-color: #ae80b5;
 }
 
+header {
+  max-width: 88%;
+}
+
 #books-container {
   display: flex;
   flex-flow: row wrap;
@@ -378,13 +387,32 @@ body .book-card .book-details .read-btn:hover {
 
 #logo {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 8em;
-  width: 100%;
+  height: 10em;
+  margin: 0 1em;
+  width: -moz-fit-content;
+  width: fit-content;
   background-color: rgba(255, 255, 255, 0.5294117647);
-  z-index: 1000;
 }
 #logo #logo-img {
   height: 100%;
+}
+
+h1 {
+  font-size: 34px;
+  margin: 0 1em;
+  text-shadow: #fafefd 1px 0 5px;
+}
+
+h2 {
+  font-size: 28px;
+  text-shadow: #fafefd 1px 0 5px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
 }/*# sourceMappingURL=style.css.map */
