@@ -168,6 +168,7 @@
 .reading-list-promt {
   display: flex;
   flex-flow: row wrap;
+  align-items: center;
   gap: 1em;
   margin: 1em;
 }
@@ -176,6 +177,8 @@
   border-radius: 5px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 700;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .reading-list-promt button:hover {
   background-color: blanchedalmond;
@@ -398,10 +401,12 @@ header {
 h1 {
   font-size: 34px;
   margin: 0 1em;
+  text-shadow: #fafefd 1px 0 5px;
 }
 
 h2 {
   font-size: 28px;
+  text-shadow: #fafefd 1px 0 5px;
 }
 
 h3 {

@@ -108,18 +108,15 @@ const getLoggedInUser = async () => {
 };
 
 
-let renderPage = async () => {
-  let isLoggedIn = await checkIfLoggedIn(); 
-  if (isLoggedIn) {
+const renderPage = async () => {
+  let user = await getLoggedInUser();
+  if (user) {
     document.querySelector("#login-wrapper").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
-    document.querySelector("#welcome-page h1").innerText = `Welcome, ${
-      JSON.parse(sessionStorage.getItem("user")).username
-    } !`;
-      await getRatings();
-      await displayUserBooks();
-      await displayAllBooks();
-
+    document.querySelector("#welcome-page h1").innerText = `Welcome, ${user.username} !`;
+    await getRatings();
+    await displayUserBooks();
+    await displayAllBooks();
   } else {
     document.querySelector("#login-wrapper").style.display = "flex";
     document.querySelector("#welcome-page").style.display = "none";
@@ -447,4 +444,4 @@ const fetchTheme = async () => {
   } catch (error) {
     console.error('Failed to fetch theme:', error);
   }
-};
+};                                                                             

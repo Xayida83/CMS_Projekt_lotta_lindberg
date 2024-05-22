@@ -47,9 +47,11 @@ header {
 h1 {
   font-size: $h1-size;
   margin: 0 1em;
+  text-shadow: $text-shadow;
 }
 h2 {
   font-size: $h2-size;
+  text-shadow: $text-shadow;
 }
 h3 {
   font-size: $h3-size;
