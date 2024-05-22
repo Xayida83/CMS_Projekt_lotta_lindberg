@@ -1,4 +1,25 @@
-### Översikt och Flöde
+# BookDucks
+## Projektöversikt 
+Uppgiften var att skapa en applikation för bokaffären Book Ducks, där administratörer kan ladda upp böcker de säljer, och användare kan logga in, betygsätta och spara böcker. Applikationen utvecklades med hjälp av Strapi CMS för backend och JavaScript för frontend.
+
+## Funktioner och Användargränssnitt
+### För Administratörer
+**Bokuppladdning:** Admin kan ladda upp böcker via Strapi's admin-gränssnitt, där varje bok har en titel, författare, antal sidor, utgivningsdatum och en bild på bokomslaget.
+
+**Temahantering:** Admin kan välja mellan minst tre olika färgteman på webbplatsen.
+### För Utloggade Användare
+**Bokvisning:** Alla böcker med fullständig information är tillgängliga för visning.
+
+**Registrering och Inloggning:** Användare kan registrera sig och logga in.
+
+### För Inloggade Användare
+**Personlig Välkomst:** Användaren välkomnas med sitt namn.
+
+**Att läsa-lista:** Profilen visar användarens "Att läsa"-lista och en lista över betygsatta böcker, som kan sorteras på titel, författare och betyg.
+
+**Betygsättning:** Användare kan betygsätta böcker, och bokens snittbetyg uppdateras i realtid baserat på alla användarbetyg.
+
+## Översikt och Flöde
 
 1. **Sidan laddas**: När användaren besöker sidan laddas alla resurser och JavaScript körs.
 2. **DOMContentLoaded-event**: När hela HTML-dokumentet har lästs och analyserats, men innan externa resurser som bilder och stilar har laddats, triggas `DOMContentLoaded`-händelsen. Detta är när vårt JavaScript börjar köra sina initieringsrutiner.
