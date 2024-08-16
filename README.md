@@ -197,4 +197,3 @@ const createBookCards = (books, container) => {
 3. Vi hämtar och visar alla böcker på sidan, och om användaren är inloggad, visas deras betyg för varje bok.
 4. Eventuella interaktioner som inloggning, registrering, utloggning och betygsättning hanteras genom API-anrop och uppdateringar av DOM.
 
-Genom att ha denna översikt är det lättare att förstå hur olika delar av applikationen samverkar och hur data flödar från servern till användarens skärm.
